@@ -1,5 +1,5 @@
  {
-    "name": "bermudaphp/http-contracts",
+    "name": "bermudaphp/http-emitter",
     "license": "MIT",
     "autoload": {
         "psr-4": {
