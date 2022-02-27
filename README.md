@@ -1,1 +1,4 @@
-# http-emitter
+# Install
+```bash
+composer require http-emitter
+````
