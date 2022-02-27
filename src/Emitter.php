@@ -22,6 +22,7 @@ final class Emitter implements EmitterInterface
     public function addEmitter(EmitterInterface $emitter): self
     {
         $this->emitters[$emitter::class] = $emitter;
+        return $this;
     }
 
     /**
