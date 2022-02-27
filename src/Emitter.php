@@ -1,6 +1,6 @@
 <?php
 
-namespace Bermuda\HTTP\Emitters;
+namespace Bermuda\HTTP;
 
 use Psr\Http\Message\ResponseInterface;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
