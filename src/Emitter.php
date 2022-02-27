@@ -10,6 +10,8 @@ use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 final class Emitter implements EmitterInterface
 {
     private array $emitters = [];
+    private ?SapiEmitter $sapiEmitter = null;
+    private ?SapiStreamEmitter $sapiStreamEmitter = null;
     public function __construct(private int $maxBufferLength = 8192) {
     }
 
@@ -21,7 +23,7 @@ final class Emitter implements EmitterInterface
     {
         $this->emitters[$emitter::class] = $emitter;
     }
-  
+
     /**
      * @param int $length
      * @return $this
@@ -29,6 +31,10 @@ final class Emitter implements EmitterInterface
     public function setMaxBufferLength(int $length): self
     {
         $this->maxBufferLength = $length;
+        if ($this->sapiStreamEmitter !== null) {
+            $this->sapiStreamEmitter = new SapiStreamEmitter($length);
+        }
+
         return $this;
     }
 
@@ -58,9 +64,17 @@ final class Emitter implements EmitterInterface
         }
 
         if (!$response->hasHeader('Content-Disposition') && !$response->hasHeader('Content-Range')) {
-            return (new SapiEmitter)->emit($response);
+            if ($this->sapiEmitter == null) {
+                $this->sapiEmitter = new SapiEmitter;
+            }
+
+            return $this->sapiEmitter->emit($response);
         }
 
-        return (new SapiStreamEmitter($this->maxBufferLength))->emit($response);
+        if ($this->sapiStreamEmitter == null) {
+            $this->sapiStreamEmitter = new SapiStreamEmitter($this->maxBufferLength);
+        }
+
+        return $this->sapiStreamEmitter->emit($response);
     }
 }
